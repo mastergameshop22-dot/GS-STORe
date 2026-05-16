@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ألعاب المحل | الأسعار</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #0d1117; color: #c9d1d9; margin: 0; padding: 20px; }
+        h1 { text-align: center; color: #58a6ff; margin-bottom: 20px; }
+        .search-container { text-align: center; margin-bottom: 20px; }
+        input[type="text"] { padding: 12px; width: 90%; max-width: 400px; border: 1px solid #30363d; border-radius: 25px; background-color: #21262d; color: #fff; outline: none; font-size: 16px; text-align: center;}
+        input[type="text"]:focus { border-color: #58a6ff; }
+        .table-container { overflow-x: auto; background-color: #161b22; border-radius: 8px; border: 1px solid #30363d; }
+        table { width: 100%; border-collapse: collapse; text-align: center; }
+        th, td { padding: 12px; border: 1px solid #30363d; }
+        .ps4-header { background-color: #003791; color: white; }
+        .ps5-header { background-color: #1a5ca6; color: white; }
+        .sub-header { background-color: #21262d; color: #8b949e; font-size: 13px; }
+        tr:hover { background-color: #1c2128; }
+        .price { color: #3fb950; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <h1>🎮 أسعار ألعاب المحل 🎮</h1>
+
+    <div class="search-container">
+        <input type="text" id="searchInput" onkeyup="searchTable()" placeholder="🔍 ابحث عن اسم اللعبة هنا...">
+    </div>
+
+    <div class="table-container">
+        <table id="gamesTable">
+            <thead>
+                <tr>
+                    <th rowspan="2" style="vertical-align: middle; width: 25%;">اسم اللعبة</th>
+                    <th colspan="3" class="ps4-header">PS4</th>
+                    <th colspan="3" class="ps5-header">PS5</th>
+                </tr>
+                <tr>
+                    <th class="sub-header">OFF</th>
+                    <th class="sub-header">PR</th>
+                    <th class="sub-header">SC</th>
+                    <th class="sub-header">OFF</th>
+                    <th class="sub-header">PR</th>
+                    <th class="sub-header">SC</th>
+                </tr>
+            </thead>
+            <tbody id="tableBody">
+                <!-- الألعاب هتتضاف هنا تلقائياً -->
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        // =========================================================
+        // ⚙️ منطقة إدارة الألعاب (لوحة التحكم بتاعتك) ⚙️
+        // هنا تقدر تضيف، تمسح، أو تعدل الأسعار.
+        // لو مفيش سعر لحاجة، اكتب مكانها علامة "-"
+        // =========================================================
+        
+        const games = [
+            
+            { name: "EA Sports FC 26", off4: "100", pr4: "300", sc4: "200", off5: "150", pr5: "450", sc5: "300" },
+            { name: "GTA V", off4: "80", pr4: "250", sc4: "150", off5: "-", pr5: "-", sc5: "-" },
+            { name: "Spider-Man 2", off4: "-", pr4: "-", sc4: "-", off5: "250", pr5: "600", sc5: "450" },
+            { name: "Crash Team Racing", off4: "50", pr4: "150", sc4: "100", off5: "50", pr5: "150", sc5: "100" }
+            
+            // عشان تضيف لعبة جديدة، انسخ السطر اللي فوق ده وغير البيانات
+        ];
+
+        // =========================================================
+
+        // كود تشغيل الجدول والبحث (ماتعدلش هنا حاجة)
+        const tbody = document.getElementById("tableBody");
+        games.forEach(game => {
+            let tr = document.createElement("tr");
+            tr.innerHTML = `
+                <td style="font-weight: bold; color: #fff;">${game.name}</td>
+                <td class="price">${game.off4}</td>
+                <td class="price">${game.pr4}</td>
+                <td class="price">${game.sc4}</td>
+                <td class="price">${game.off5}</td>
+                <td class="price">${game.pr5}</td>
+                <td class="price">${game.sc5}</td>
+            `;
+            tbody.appendChild(tr);
+        });
+
+        function searchTable() {
+            let input = document.getElementById("searchInput").value.toUpperCase();
+            let tr = document.getElementById("tableBody").getElementsByTagName("tr");
+            for (let i = 0; i < tr.length; i++) {
+                let td = tr[i].getElementsByTagName("td")[0];
+                if (td) {
+                    let txtValue = td.textContent || td.innerText;
+                    if (txtValue.toUpperCase().indexOf(input) > -1) {
+                        tr[i].style.display = "";
+                    } else {
+                        tr[i].style.display = "none";
+                    }
+                }       
+            }
+        }
+    </script>
+</body>
+</html>
