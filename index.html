@@ -26,25 +26,15 @@
         tr:hover { background-color: #1c2128; }
         .price { color: #3fb950; font-weight: bold; }
 
-        /* تنسيقات اللعبة اللي خلصت */
-        .out-of-stock {
-            opacity: 0.5; /* تخفيف اللون */
-            text-decoration: line-through; /* شطب الكلام */
-        }
-        .out-of-stock-price {
-            color: #da3633; /* لون أحمر للأسعار اللي خلصت */
-            text-decoration: line-through;
-        }
-        .badge-out {
-            background-color: #da3633;
-            color: white;
-            font-size: 11px;
-            padding: 2px 6px;
-            border-radius: 4px;
-            margin-right: 10px;
+        /* تنسيق حالة النفاذ */
+        .sold-out {
+            color: #da3633;
+            font-size: 13px;
             font-weight: bold;
+            background-color: rgba(218, 54, 51, 0.1);
+            padding: 4px 8px;
+            border-radius: 4px;
             display: inline-block;
-            text-decoration: none !important;
         }
     </style>
 </head>
@@ -62,7 +52,7 @@
         <table class="ps5-table">
             <thead>
                 <tr>
-                    <th rowspan="2" style="vertical-align: middle; width: 45%;">اسم اللعبة</th>
+                    <th rowspan="2" style="vertical-align: middle; width: 40%;">اسم اللعبة</th>
                     <th colspan="3">الأسعار</th>
                 </tr>
                 <tr>
@@ -81,7 +71,7 @@
         <table class="ps4-table">
             <thead>
                 <tr>
-                    <th rowspan="2" style="vertical-align: middle; width: 45%;">اسم اللعبة</th>
+                    <th rowspan="2" style="vertical-align: middle; width: 40%;">اسم اللعبة</th>
                     <th colspan="3">الأسعار</th>
                 </tr>
                 <tr>
@@ -97,48 +87,43 @@
     <script>
         // =========================================================
         // ⚙️ منطقة إدارة ألعاب PS5 ⚙️
-        // لو اللعبة خلصت، ضيف  , out: true  في آخر السطر بتاعها
+        // لو نوع معين خلص (PR مثلاً)، اكتب مكانه حرف x
         // =========================================================
         const ps5Games = [
-            { name: "EA Sports FC 26", off: "150", pr: "450", sc: "300" },
-            { name: "Spider-Man 2", off: "250", pr: "600", sc: "450", out: true }, // مثال للعبة خلصت
-            { name: "God of War Ragnarok", off: "200", pr: "500", sc: "350" }
+            // مثال للتوضيح: هنا الـ PR خلصان فمكتوب مكانه x
+            { name: "EA Sports FC 26", off: "150", pr: "x", sc: "300" },
         ];
 
         // =========================================================
         // ⚙️ منطقة إدارة ألعاب PS4 ⚙️
         // =========================================================
         const ps4Games = [
-            { name: "EA Sports FC 26", off: "100", pr: "300", sc: "200" },
-            { name: "GTA V", off: "80", pr: "250", sc: "150" },
-            { name: "Crash Team Racing", off: "50", pr: "150", sc: "100", out: true } // مثال للعبة خلصت
+            // مثال للتوضيح: هنا الـ OFF خلصان فمكتوب مكانه x
+            { name: "GTA V", off: "x", pr: "250", sc: "150" },
         ];
 
 
         // =========================================================
         // كود التشغيل
         // =========================================================
+        
+        // دالة لمعرفة السعر أو كتابة (نفدت) لو مكتوب x
+        function formatPrice(val) {
+            if (val.toLowerCase() === 'x' || val === '❌') {
+                return '<span class="sold-out">نفدت ❌</span>';
+            }
+            return `<span class="price">${val}</span>`;
+        }
+
         function renderTable(gamesArray, tbodyId) {
             const tbody = document.getElementById(tbodyId);
             gamesArray.forEach(game => {
                 let tr = document.createElement("tr");
-                
-                // التأكد إذا كانت اللعبة متوفرة أو نفدت
-                let isOut = game.out ? true : false;
-                
-                // تصميم اسم اللعبة
-                let nameHtml = isOut 
-                    ? `<span class="out-of-stock">${game.name}</span> <span class="badge-out">نفدت ❌</span>` 
-                    : game.name;
-                
-                // تصميم الأسعار
-                let priceClass = isOut ? 'out-of-stock-price' : 'price';
-
                 tr.innerHTML = `
-                    <td style="font-weight: bold; color: #fff; text-align: right;">${nameHtml}</td>
-                    <td class="${priceClass}">${game.off}</td>
-                    <td class="${priceClass}">${game.pr}</td>
-                    <td class="${priceClass}">${game.sc}</td>
+                    <td style="font-weight: bold; color: #fff; text-align: right;">${game.name}</td>
+                    <td>${formatPrice(game.off)}</td>
+                    <td>${formatPrice(game.pr)}</td>
+                    <td>${formatPrice(game.sc)}</td>
                 `;
                 tbody.appendChild(tr);
             });
